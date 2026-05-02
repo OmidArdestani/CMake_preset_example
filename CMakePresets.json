@@ -1,0 +1,247 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+
+  "configurePresets": [
+
+    {
+      "name": "base",
+      "hidden": true,
+      "description": "Shared defaults for all presets",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+
+    {
+      "name": "base-macos",
+      "hidden": true,
+      "inherits": "base",
+      "description": "macOS arm64 base — Qt6 installed at /Volumes/Mac-Ex-SSD/Qt/6.11.0/macos. Uses Unix Makefiles to avoid Xcode generator issues with special characters in path.",
+      "generator": "Unix Makefiles",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "13.0",
+        "Qt6_DIR": "/Volumes/Mac-Ex-SSD/Qt/6.11.0/macos/lib/cmake/Qt6",
+        "CMAKE_PREFIX_PATH": "/Volumes/Mac-Ex-SSD/Qt/6.11.0/macos"
+      }
+    },
+
+    {
+      "name": "base-windows-msvc",
+      "hidden": true,
+      "inherits": "base",
+      "description": "Windows x64 MSVC base. Update Qt6_DIR + CMAKE_PREFIX_PATH to match your Qt install, e.g. C:/Qt/6.8.0/msvc2022_64",
+      "generator": "Visual Studio 17 2022",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "Qt6_DIR": "C:/Qt/6.8.0/msvc2022_64/lib/cmake/Qt6",
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.8.0/msvc2022_64"
+      }
+    },
+
+    {
+      "name": "base-windows-mingw",
+      "hidden": true,
+      "inherits": "base",
+      "description": "Windows x64 MinGW+Ninja base. Update Qt6_DIR + CMAKE_PREFIX_PATH to match your Qt install, e.g. C:/Qt/6.8.0/mingw_64",
+      "generator": "Ninja",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "Qt6_DIR": "C:/Qt/6.8.0/mingw_64/lib/cmake/Qt6",
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.8.0/mingw_64"
+      }
+    },
+
+    {
+      "name": "macos-debug",
+      "displayName": "macOS | Debug (Apple Clang, Xcode)",
+      "description": "macOS arm64 Debug build using the Xcode generator",
+      "inherits": "base-macos",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "macos-release",
+      "displayName": "macOS | Release (Apple Clang, Xcode)",
+      "description": "macOS arm64 Release build using the Xcode generator",
+      "inherits": "base-macos",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "macos-relwithdebinfo",
+      "displayName": "macOS | RelWithDebInfo (Apple Clang, Xcode)",
+      "description": "macOS arm64 RelWithDebInfo build using the Xcode generator",
+      "inherits": "base-macos",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+
+    {
+      "name": "windows-msvc-debug",
+      "displayName": "Windows | Debug (MSVC, Visual Studio 2022)",
+      "description": "Windows x64 Debug build using Visual Studio 17 2022",
+      "inherits": "base-windows-msvc",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-msvc-release",
+      "displayName": "Windows | Release (MSVC, Visual Studio 2022)",
+      "description": "Windows x64 Release build using Visual Studio 17 2022",
+      "inherits": "base-windows-msvc",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "windows-msvc-relwithdebinfo",
+      "displayName": "Windows | RelWithDebInfo (MSVC, Visual Studio 2022)",
+      "description": "Windows x64 RelWithDebInfo build using Visual Studio 17 2022",
+      "inherits": "base-windows-msvc",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+
+    {
+      "name": "windows-mingw-debug",
+      "displayName": "Windows | Debug (MinGW, Ninja)",
+      "description": "Windows x64 Debug build using MinGW + Ninja",
+      "inherits": "base-windows-mingw",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "windows-mingw-release",
+      "displayName": "Windows | Release (MinGW, Ninja)",
+      "description": "Windows x64 Release build using MinGW + Ninja",
+      "inherits": "base-windows-mingw",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+
+  "buildPresets": [
+    {
+      "name": "macos-debug",
+      "displayName": "Build macOS Debug",
+      "configurePreset": "macos-debug"
+    },
+    {
+      "name": "macos-release",
+      "displayName": "Build macOS Release",
+      "configurePreset": "macos-release"
+    },
+    {
+      "name": "macos-relwithdebinfo",
+      "displayName": "Build macOS RelWithDebInfo",
+      "configurePreset": "macos-relwithdebinfo"
+    },
+    {
+      "name": "windows-msvc-debug",
+      "displayName": "Build Windows MSVC Debug",
+      "configurePreset": "windows-msvc-debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "windows-msvc-release",
+      "displayName": "Build Windows MSVC Release",
+      "configurePreset": "windows-msvc-release",
+      "configuration": "Release"
+    },
+    {
+      "name": "windows-msvc-relwithdebinfo",
+      "displayName": "Build Windows MSVC RelWithDebInfo",
+      "configurePreset": "windows-msvc-relwithdebinfo",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "windows-mingw-debug",
+      "displayName": "Build Windows MinGW Debug",
+      "configurePreset": "windows-mingw-debug",
+      "configuration": "Debug"
+    },
+    {
+      "name": "windows-mingw-release",
+      "displayName": "Build Windows MinGW Release",
+      "configurePreset": "windows-mingw-release",
+      "configuration": "Release"
+    }
+  ],
+
+  "testPresets": [
+    {
+      "name": "macos-debug",
+      "displayName": "Test macOS Debug",
+      "configurePreset": "macos-debug",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "macos-release",
+      "displayName": "Test macOS Release",
+      "configurePreset": "macos-release",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "windows-msvc-debug",
+      "displayName": "Test Windows MSVC Debug",
+      "configurePreset": "windows-msvc-debug",
+      "configuration": "Debug",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "windows-msvc-release",
+      "displayName": "Test Windows MSVC Release",
+      "configurePreset": "windows-msvc-release",
+      "configuration": "Release",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "windows-mingw-debug",
+      "displayName": "Test Windows MinGW Debug",
+      "configurePreset": "windows-mingw-debug",
+      "configuration": "Debug",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "windows-mingw-release",
+      "displayName": "Test Windows MinGW Release",
+      "configurePreset": "windows-mingw-release",
+      "configuration": "Release",
+      "output": { "outputOnFailure": true }
+    }
+  ]
+}
